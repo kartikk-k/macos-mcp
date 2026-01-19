@@ -1,4 +1,4 @@
-import { select, input, confirm } from "@inquirer/prompts";
+import { select, input, confirm, number } from "@inquirer/prompts";
 import {
   getAccounts,
   getMails,
@@ -9,23 +9,49 @@ import {
   getTotalUnreadCount,
   type SearchField,
 } from "./src/mail";
+import {
+  getVolume,
+  setVolume,
+  isMuted,
+  mute,
+  unmute,
+  toggleMute,
+  beep,
+} from "./src/audio";
+
+function safeGetUnreadCount(): number {
+  try {
+    return getTotalUnreadCount();
+  } catch {
+    return 0;
+  }
+}
+
+function safeGetVolume(): number {
+  try {
+    return getVolume();
+  } catch {
+    return -1;
+  }
+}
+
+function safeIsMuted(): boolean | null {
+  try {
+    return isMuted();
+  } catch {
+    return null;
+  }
+}
 
 async function main() {
-  console.log("Mail CLI - Navigate with arrow keys\n");
+  console.log("AppleScript CLI - Navigate with arrow keys\n");
 
   while (true) {
-    const totalUnread = getTotalUnreadCount();
-    const unreadLabel = totalUnread > 0 ? ` (${totalUnread} unread)` : "";
-
     const mainChoice = await select({
       message: "What would you like to do?",
       choices: [
-        { name: "View Mail Accounts", value: "accounts" },
-        { name: "Read Emails from Account", value: "emails" },
-        { name: "Compose Email", value: "compose" },
-        { name: "Search Emails", value: "search" },
-        { name: "Check for New Mail", value: "check" },
-        { name: `Unread Count${unreadLabel}`, value: "unread" },
+        { name: "Mail", value: "mail" },
+        { name: "Audio", value: "audio" },
         { name: "Exit", value: "exit" },
       ],
     });
@@ -35,29 +61,44 @@ async function main() {
       break;
     }
 
-    if (mainChoice === "accounts") {
-      await handleViewAccounts();
+    if (mainChoice === "mail") {
+      await handleMailMenu();
     }
 
-    if (mainChoice === "emails") {
-      await handleReadEmails();
+    if (mainChoice === "audio") {
+      await handleAudioMenu();
     }
+  }
+}
 
-    if (mainChoice === "compose") {
-      await handleCompose();
-    }
+// ==================== MAIL MENU ====================
 
-    if (mainChoice === "search") {
-      await handleSearch();
-    }
+async function handleMailMenu() {
+  while (true) {
+    const totalUnread = safeGetUnreadCount();
+    const unreadLabel = totalUnread > 0 ? ` (${totalUnread} unread)` : "";
 
-    if (mainChoice === "check") {
-      await handleCheckMail();
-    }
+    const choice = await select({
+      message: "Mail Options:",
+      choices: [
+        { name: "View Mail Accounts", value: "accounts" },
+        { name: "Read Emails from Account", value: "emails" },
+        { name: "Compose Email", value: "compose" },
+        { name: "Search Emails", value: "search" },
+        { name: "Check for New Mail", value: "check" },
+        { name: `Unread Count${unreadLabel}`, value: "unread" },
+        { name: "< Back", value: "__back__" },
+      ],
+    });
 
-    if (mainChoice === "unread") {
-      await handleUnreadCount();
-    }
+    if (choice === "__back__") return;
+
+    if (choice === "accounts") await handleViewAccounts();
+    if (choice === "emails") await handleReadEmails();
+    if (choice === "compose") await handleCompose();
+    if (choice === "search") await handleSearch();
+    if (choice === "check") await handleCheckMail();
+    if (choice === "unread") await handleUnreadCount();
   }
 }
 
@@ -277,6 +318,71 @@ async function handleUnreadCount() {
     total += item.count;
   });
   console.log(`\n  Total: ${total} unread\n`);
+}
+
+// ==================== AUDIO MENU ====================
+
+async function handleAudioMenu() {
+  while (true) {
+    const currentVolume = getVolume();
+    const mutedStatus = isMuted();
+    const mutedLabel = mutedStatus ? " [MUTED]" : "";
+
+    const choice = await select({
+      message: `Audio Controls (Volume: ${currentVolume}%${mutedLabel}):`,
+      choices: [
+        { name: `Set Volume (current: ${currentVolume}%)`, value: "set_volume" },
+        { name: "Volume Up (+10%)", value: "volume_up" },
+        { name: "Volume Down (-10%)", value: "volume_down" },
+        { name: mutedStatus ? "Unmute" : "Mute", value: "toggle_mute" },
+        { name: "Play Beep", value: "beep" },
+        { name: "< Back", value: "__back__" },
+      ],
+    });
+
+    if (choice === "__back__") return;
+
+    if (choice === "set_volume") {
+      const newVolume = await number({
+        message: "Enter volume level (0-100):",
+        default: currentVolume,
+        min: 0,
+        max: 100,
+      });
+      if (newVolume !== undefined) {
+        setVolume(newVolume);
+        console.log(`\nVolume set to ${newVolume}%\n`);
+      }
+    }
+
+    if (choice === "volume_up") {
+      const newVolume = Math.min(100, currentVolume + 10);
+      setVolume(newVolume);
+      console.log(`\nVolume: ${newVolume}%\n`);
+    }
+
+    if (choice === "volume_down") {
+      const newVolume = Math.max(0, currentVolume - 10);
+      setVolume(newVolume);
+      console.log(`\nVolume: ${newVolume}%\n`);
+    }
+
+    if (choice === "toggle_mute") {
+      const nowMuted = toggleMute();
+      console.log(nowMuted ? "\nMuted\n" : "\nUnmuted\n");
+    }
+
+    if (choice === "beep") {
+      const times = await number({
+        message: "How many beeps? (1-10):",
+        default: 1,
+        min: 1,
+        max: 10,
+      });
+      beep(times || 1);
+      console.log(`\nPlayed ${times || 1} beep(s)\n`);
+    }
+  }
 }
 
 main().catch(console.error);

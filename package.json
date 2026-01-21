@@ -1,7 +1,44 @@
 {
-  "name": "apple-scripts",
-  "module": "index.ts",
+  "name": "macos-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for controlling macOS features (volume, mail) via AppleScript",
   "type": "module",
+  "main": "mcp/index.ts",
+  "bin": {
+    "macos-mcp": "mcp/macos-mcp.ts"
+  },
+  "files": [
+    "mcp",
+    "src"
+  ],
+  "scripts": {
+    "start": "bun run mcp/macos-mcp.ts",
+    "inspector": "npx @modelcontextprotocol/inspector bun run mcp/macos-mcp.ts"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "macos",
+    "applescript",
+    "apple-mail",
+    "volume",
+    "audio",
+    "claude",
+    "ai"
+  ],
+  "author": "kartikk-k <hellokartikk@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kartikk-k/macos-mcp.git"
+  },
+  "homepage": "https://github.com/kartikk-k/macos-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/kartikk-k/macos-mcp/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
@@ -9,6 +46,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@inquirer/prompts": "^8.2.0"
+    "@inquirer/prompts": "^8.2.0",
+    "@modelcontextprotocol/sdk": "^1.25.3"
   }
 }

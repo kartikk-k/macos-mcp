@@ -41,6 +41,36 @@ import {
   getDisks,
 } from "../src/finder";
 
+// Import chrome functions
+import {
+  getAllTabs,
+  getActiveTab,
+  openUrl,
+  closeTab,
+  closeActiveTab,
+  setActiveTab,
+  reloadTab,
+  reloadActiveTab,
+  getWindows,
+  newWindow,
+  closeWindow,
+  focusWindow,
+  goBack,
+  goForward,
+  goBackActiveTab,
+  goForwardActiveTab,
+  executeJavaScript,
+  executeJavaScriptInActiveTab,
+  getPageSource,
+  getPageText,
+  getPageTitle,
+  clickElement,
+  fillInput,
+  scrollTo,
+  scrollToBottom,
+  scrollToTop,
+} from "../src/chrome";
+
 // Tool definitions
 export const tools = [
   // Audio tools
@@ -496,6 +526,309 @@ export const tools = [
       required: [],
     },
   },
+  // Chrome tools
+  {
+    name: "chrome_get_all_tabs",
+    description: "Get all open tabs in Chrome across all windows",
+    inputSchema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "chrome_get_active_tab",
+    description: "Get the currently active tab in Chrome",
+    inputSchema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "chrome_open_url",
+    description: "Open a URL in Chrome",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        url: {
+          type: "string",
+          description: "The URL to open",
+        },
+        newTab: {
+          type: "boolean",
+          description: "Open in a new tab (default: true)",
+          default: true,
+        },
+      },
+      required: ["url"],
+    },
+  },
+  {
+    name: "chrome_close_tab",
+    description: "Close a specific tab in Chrome",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        windowIndex: {
+          type: "number",
+          description: "Window index (1-based)",
+          default: 1,
+        },
+        tabIndex: {
+          type: "number",
+          description: "Tab index (1-based)",
+          default: 1,
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "chrome_close_active_tab",
+    description: "Close the currently active tab in Chrome",
+    inputSchema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "chrome_set_active_tab",
+    description: "Switch to a specific tab in Chrome",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        windowIndex: {
+          type: "number",
+          description: "Window index (1-based)",
+        },
+        tabIndex: {
+          type: "number",
+          description: "Tab index (1-based)",
+        },
+      },
+      required: ["windowIndex", "tabIndex"],
+    },
+  },
+  {
+    name: "chrome_reload_tab",
+    description: "Reload a specific tab in Chrome",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        windowIndex: {
+          type: "number",
+          description: "Window index (1-based)",
+          default: 1,
+        },
+        tabIndex: {
+          type: "number",
+          description: "Tab index (1-based)",
+          default: 1,
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "chrome_reload_active_tab",
+    description: "Reload the currently active tab in Chrome",
+    inputSchema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "chrome_get_windows",
+    description: "Get all Chrome windows with their info",
+    inputSchema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "chrome_new_window",
+    description: "Open a new Chrome window",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        url: {
+          type: "string",
+          description: "URL to open (optional)",
+        },
+        incognito: {
+          type: "boolean",
+          description: "Open in incognito mode",
+          default: false,
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "chrome_close_window",
+    description: "Close a Chrome window",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        windowIndex: {
+          type: "number",
+          description: "Window index (1-based)",
+          default: 1,
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "chrome_go_back",
+    description: "Navigate back in a Chrome tab",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        windowIndex: {
+          type: "number",
+          description: "Window index (1-based)",
+          default: 1,
+        },
+        tabIndex: {
+          type: "number",
+          description: "Tab index (1-based)",
+          default: 1,
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "chrome_go_forward",
+    description: "Navigate forward in a Chrome tab",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        windowIndex: {
+          type: "number",
+          description: "Window index (1-based)",
+          default: 1,
+        },
+        tabIndex: {
+          type: "number",
+          description: "Tab index (1-based)",
+          default: 1,
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "chrome_execute_javascript",
+    description: "Execute JavaScript in a Chrome tab",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        javascript: {
+          type: "string",
+          description: "JavaScript code to execute",
+        },
+        windowIndex: {
+          type: "number",
+          description: "Window index (1-based)",
+          default: 1,
+        },
+        tabIndex: {
+          type: "number",
+          description: "Tab index (1-based)",
+          default: 1,
+        },
+      },
+      required: ["javascript"],
+    },
+  },
+  {
+    name: "chrome_get_page_text",
+    description: "Get the text content of the current page",
+    inputSchema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "chrome_get_page_title",
+    description: "Get the title of the current page",
+    inputSchema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "chrome_get_page_source",
+    description: "Get the HTML source of the current page",
+    inputSchema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
+  {
+    name: "chrome_click_element",
+    description: "Click an element on the page using a CSS selector",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        selector: {
+          type: "string",
+          description: "CSS selector for the element to click",
+        },
+      },
+      required: ["selector"],
+    },
+  },
+  {
+    name: "chrome_fill_input",
+    description: "Fill an input field on the page",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        selector: {
+          type: "string",
+          description: "CSS selector for the input element",
+        },
+        value: {
+          type: "string",
+          description: "Value to fill in",
+        },
+      },
+      required: ["selector", "value"],
+    },
+  },
+  {
+    name: "chrome_scroll",
+    description: "Scroll the page",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        direction: {
+          type: "string",
+          enum: ["top", "bottom", "position"],
+          description: "Scroll direction or 'position' for specific coordinates",
+        },
+        x: {
+          type: "number",
+          description: "X coordinate (only for direction='position')",
+        },
+        y: {
+          type: "number",
+          description: "Y coordinate (only for direction='position')",
+        },
+      },
+      required: ["direction"],
+    },
+  },
 ];
 
 export type ToolResult = {
@@ -674,6 +1007,136 @@ export function handleToolCall(
       case "finder_get_disks":
         result = { disks: getDisks() };
         break;
+
+      // Chrome tools
+      case "chrome_get_all_tabs":
+        result = getAllTabs();
+        break;
+      case "chrome_get_active_tab":
+        result = getActiveTab();
+        break;
+      case "chrome_open_url":
+        result = {
+          success: openUrl(
+            (args as { url: string; newTab?: boolean }).url,
+            (args as { url: string; newTab?: boolean }).newTab ?? true
+          ),
+        };
+        break;
+      case "chrome_close_tab":
+        result = {
+          success: closeTab(
+            (args as { windowIndex?: number; tabIndex?: number }).windowIndex ?? 1,
+            (args as { windowIndex?: number; tabIndex?: number }).tabIndex ?? 1
+          ),
+        };
+        break;
+      case "chrome_close_active_tab":
+        result = { success: closeActiveTab() };
+        break;
+      case "chrome_set_active_tab":
+        result = {
+          success: setActiveTab(
+            (args as { windowIndex: number; tabIndex: number }).windowIndex,
+            (args as { windowIndex: number; tabIndex: number }).tabIndex
+          ),
+        };
+        break;
+      case "chrome_reload_tab":
+        result = {
+          success: reloadTab(
+            (args as { windowIndex?: number; tabIndex?: number }).windowIndex ?? 1,
+            (args as { windowIndex?: number; tabIndex?: number }).tabIndex ?? 1
+          ),
+        };
+        break;
+      case "chrome_reload_active_tab":
+        result = { success: reloadActiveTab() };
+        break;
+      case "chrome_get_windows":
+        result = getWindows();
+        break;
+      case "chrome_new_window":
+        result = {
+          success: newWindow(
+            (args as { url?: string; incognito?: boolean }).url,
+            (args as { url?: string; incognito?: boolean }).incognito ?? false
+          ),
+        };
+        break;
+      case "chrome_close_window":
+        result = {
+          success: closeWindow(
+            (args as { windowIndex?: number }).windowIndex ?? 1
+          ),
+        };
+        break;
+      case "chrome_go_back":
+        result = {
+          success: goBack(
+            (args as { windowIndex?: number; tabIndex?: number }).windowIndex ?? 1,
+            (args as { windowIndex?: number; tabIndex?: number }).tabIndex ?? 1
+          ),
+        };
+        break;
+      case "chrome_go_forward":
+        result = {
+          success: goForward(
+            (args as { windowIndex?: number; tabIndex?: number }).windowIndex ?? 1,
+            (args as { windowIndex?: number; tabIndex?: number }).tabIndex ?? 1
+          ),
+        };
+        break;
+      case "chrome_execute_javascript": {
+        const jsArgs = args as {
+          javascript: string;
+          windowIndex?: number;
+          tabIndex?: number;
+        };
+        result = {
+          result: executeJavaScript(
+            jsArgs.javascript,
+            jsArgs.windowIndex ?? 1,
+            jsArgs.tabIndex ?? 1
+          ),
+        };
+        break;
+      }
+      case "chrome_get_page_text":
+        result = { text: getPageText() };
+        break;
+      case "chrome_get_page_title":
+        result = { title: getPageTitle() };
+        break;
+      case "chrome_get_page_source":
+        result = { source: getPageSource() };
+        break;
+      case "chrome_click_element":
+        result = { result: clickElement((args as { selector: string }).selector) };
+        break;
+      case "chrome_fill_input":
+        result = {
+          result: fillInput(
+            (args as { selector: string; value: string }).selector,
+            (args as { selector: string; value: string }).value
+          ),
+        };
+        break;
+      case "chrome_scroll": {
+        const scrollArgs = args as {
+          direction: "top" | "bottom" | "position";
+          x?: number;
+          y?: number;
+        };
+        if (scrollArgs.direction === "top") {
+          result = { result: scrollToTop() };
+        } else if (scrollArgs.direction === "bottom") {
+          result = { result: scrollToBottom() };
+        } else {
+          result = { result: scrollTo(scrollArgs.x ?? 0, scrollArgs.y ?? 0) };
+        }
+        break;
+      }
 
       default:
         return {

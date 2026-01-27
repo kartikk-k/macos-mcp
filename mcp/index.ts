@@ -9,6 +9,7 @@ import { remindersTools } from "./tools/reminders";
 import { notesTools } from "./tools/notes";
 import { contactsTools } from "./tools/contacts";
 import { terminalTools } from "./tools/terminal";
+import { aiAgentTools } from "./tools/ai-agent";
 
 // Import handlers
 import { handleAudioTool } from "./handlers/audio";
@@ -21,6 +22,7 @@ import { handleRemindersTool } from "./handlers/reminders";
 import { handleNotesTool } from "./handlers/notes";
 import { handleContactsTool } from "./handlers/contacts";
 import { handleTerminalTool } from "./handlers/terminal";
+import { handleAiAgentTool } from "./handlers/ai-agent";
 
 // Combine all tool definitions
 export const tools = [
@@ -34,6 +36,7 @@ export const tools = [
   ...notesTools,
   ...contactsTools,
   ...terminalTools,
+  ...aiAgentTools,
 ];
 
 export type ToolResult = {
@@ -73,6 +76,8 @@ export function handleToolCall(
       result = handleContactsTool(name, args);
     } else if (name.startsWith("terminal_")) {
       result = handleTerminalTool(name, args);
+    } else if (name.startsWith("ai_agent_")) {
+      result = handleAiAgentTool(name, args);
     } else {
       return {
         content: [{ type: "text", text: `Unknown tool: ${name}` }],

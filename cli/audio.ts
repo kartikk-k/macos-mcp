@@ -20,7 +20,7 @@ export async function handleAudioMenu() {
         { name: "Volume Up (+10%)", value: "volume_up" },
         { name: "Volume Down (-10%)", value: "volume_down" },
         { name: mutedStatus ? "Unmute" : "Mute", value: "toggle_mute" },
-        { name: "Play Beep", value: "beep" },
+        { name: "Play System Sound", value: "beep" },
         { name: "< Back", value: "__back__" },
       ],
     });
@@ -58,14 +58,34 @@ export async function handleAudioMenu() {
     }
 
     if (choice === "beep") {
+      const sound = await select({
+        message: "Select a sound:",
+        choices: [
+          { name: "Pop (default)", value: "Pop" },
+          { name: "Basso", value: "Basso" },
+          { name: "Blow", value: "Blow" },
+          { name: "Bottle", value: "Bottle" },
+          { name: "Frog", value: "Frog" },
+          { name: "Funk", value: "Funk" },
+          { name: "Glass", value: "Glass" },
+          { name: "Hero", value: "Hero" },
+          { name: "Morse", value: "Morse" },
+          { name: "Ping", value: "Ping" },
+          { name: "Purr", value: "Purr" },
+          { name: "Sosumi", value: "Sosumi" },
+          { name: "Submarine", value: "Submarine" },
+          { name: "Tink", value: "Tink" },
+        ],
+      });
+
       const times = await number({
-        message: "How many beeps? (1-10):",
+        message: "How many times? (1-10):",
         default: 1,
         min: 1,
         max: 10,
       });
-      beep(times || 1);
-      console.log(`\nPlayed ${times || 1} beep(s)\n`);
+      beep(times || 1, sound as any);
+      console.log(`\nPlayed ${sound} sound ${times || 1} time(s)\n`);
     }
   }
 }

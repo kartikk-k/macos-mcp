@@ -32,7 +32,10 @@ export function handleAudioTool(
     case "toggle_mute":
       return { muted: toggleMute() };
     case "beep":
-      beep((args as { times?: number }).times);
+      beep(
+        (args as { times?: number; sound?: string }).times,
+        (args as { times?: number; sound?: string }).sound as any
+      );
       return { success: true };
     default:
       throw new Error(`Unknown audio tool: ${name}`);

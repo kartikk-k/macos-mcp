@@ -5,10 +5,10 @@ export function handleAiAgentTool(
   args: Record<string, unknown>
 ): unknown {
   switch (name) {
-    case "ai_agent_task_completed":
+    case "response_completed":
       completed();
       return { success: true, message: "Task completed notification played" };
-    case "ai_agent_input_required":
+    case "request_user_input":
       inputRequired();
       return { success: true, message: "Input required notification played" };
     default:

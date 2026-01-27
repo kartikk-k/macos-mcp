@@ -76,7 +76,7 @@ export function handleToolCall(
       result = handleContactsTool(name, args);
     } else if (name.startsWith("terminal_")) {
       result = handleTerminalTool(name, args);
-    } else if (name.startsWith("ai_agent_")) {
+    } else if (name.startsWith("response_completed") || name.startsWith("request_user_input")) {
       result = handleAiAgentTool(name, args);
     } else {
       return {

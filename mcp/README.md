@@ -59,6 +59,12 @@ A comprehensive Model Context Protocol (MCP) server that provides tools for cont
 - `get_unread_count` - Get unread counts per mailbox
 - `get_total_unread_count` - Get total unread count
 
+### Notification Tools
+- `send_notification` - Display native macOS notification with title, message, subtitle, and sound
+- `send_notification_with_actions` - Display interactive dialog with custom action buttons (Accept/Reject, etc.)
+- `send_alert_with_actions` - Display prominent alert with custom action buttons (for important confirmations)
+- `send_notification_with_text_input` - Prompt user for text input with custom buttons (supports password mode)
+
 ### Notes Tools
 - `notes_list_folders` - List all Notes folders
 - `notes_list_notes` - List notes from a folder
@@ -201,6 +207,7 @@ mcp/
 │   ├── finder.ts
 │   ├── mail.ts
 │   ├── notes.ts
+│   ├── notification.ts
 │   ├── reminders.ts
 │   ├── safari.ts
 │   └── terminal.ts
@@ -212,6 +219,7 @@ mcp/
     ├── finder.ts
     ├── mail.ts
     ├── notes.ts
+    ├── notification.ts
     ├── reminders.ts
     ├── safari.ts
     └── terminal.ts
@@ -224,6 +232,7 @@ src/
 ├── finder/         # Finder operations
 ├── mail/           # Apple Mail functions
 ├── notes/          # Notes functions
+├── notification/   # Notification and dialog functions
 ├── reminders/      # Reminders functions
 ├── safari/         # Safari automation
 └── terminal/       # Terminal control

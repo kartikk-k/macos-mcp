@@ -82,6 +82,14 @@ The CLI provides interactive menus for all macOS system integrations:
 - Check for new mail
 - View unread counts
 
+### Notification Controls
+- **Basic Notifications**: Send simple notifications with title, message, subtitle, and sound
+- **Interactive Dialogs**: Display dialogs with custom action buttons (Accept/Reject, etc.)
+- **Alerts**: Show prominent alerts with action buttons for important confirmations
+- **Text Input**: Prompt users for text input with customizable buttons
+- **Password Input**: Request hidden text input for sensitive information
+- **Custom Options**: Configure timeouts, button labels, and default selections
+
 ### Notes Management
 - **Notes**: List, view, create, update, delete notes
 - **Folders**: List, create, delete folders
@@ -183,6 +191,7 @@ cli/
 ├── index.ts        # Main menu and CLI entry point
 ├── mail.ts         # Apple Mail operations
 ├── notes.ts        # Notes and folders management
+├── notification.ts # Notifications, dialogs, and user input
 ├── reminders.ts    # Reminders and lists management
 ├── safari.ts       # Safari browser automation
 ├── terminal.ts     # Terminal window and command control

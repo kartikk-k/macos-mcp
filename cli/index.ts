@@ -9,6 +9,7 @@ import { handleNotesMenu } from "./notes";
 import { handleRemindersMenu } from "./reminders";
 import { handleSafariMenu } from "./safari";
 import { handleTerminalMenu } from "./terminal";
+import { handleNotificationMenu } from "./notification";
 
 export async function main() {
   console.log("AppleScript CLI - Navigate with arrow keys\n");
@@ -24,6 +25,7 @@ export async function main() {
         { name: "Finder", value: "finder" },
         { name: "Mail", value: "mail" },
         { name: "Notes", value: "notes" },
+        { name: "Notification", value: "notification" },
         { name: "Reminders", value: "reminders" },
         { name: "Safari", value: "safari" },
         { name: "Terminal", value: "terminal" },
@@ -62,6 +64,10 @@ export async function main() {
 
     if (mainChoice === "notes") {
       await handleNotesMenu();
+    }
+
+    if (mainChoice === "notification") {
+      await handleNotificationMenu();
     }
 
     if (mainChoice === "reminders") {

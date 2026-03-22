@@ -157,6 +157,11 @@ Or if installed globally:
 ### Claude Code
 
 Add to your Claude Code MCP settings (`~/.claude/settings.json`):
+```bash
+  claude mcp add-json macos '{"type":"stdio","command":"bunx","args":["macos-mcp"]}' --scope user
+```
+
+OR 
 
 ```json
 {
